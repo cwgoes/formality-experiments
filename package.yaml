@@ -1,0 +1,76 @@
+name:                formality-experiments
+version:             0.1.0.0
+synopsis:            Experiments related to the Formality language
+homepage:            https://github.com/cwgoes/formality-experiments#readme
+license:             BSD3
+author:              Christopher Goes
+maintainer:          cwgoes@pluranimity.org
+copyright:           (c) 2019 Christopher Goes
+category:            Web
+extra-source-files:
+- README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - protolude
+  - text
+  - mtl
+  - containers
+
+default-extensions:
+  - NoImplicitPrelude
+  - OverloadedStrings
+  - NoMonomorphismRestriction
+  - RankNTypes
+  - LambdaCase
+  - UnicodeSyntax
+  - GADTs
+  - ScopedTypeVariables
+  - DeriveGeneric
+  - DeriveAnyClass
+  - DerivingStrategies
+  - FlexibleContexts
+  - FlexibleInstances
+  - DataKinds
+  - GeneralizedNewtypeDeriving
+  - DefaultSignatures
+  - QuasiQuotes
+  - TypeOperators
+  - MultiParamTypeClasses
+  - MultiWayIf
+
+ghc-options:
+  - -ferror-spans
+  - -Wall
+  - -fno-warn-orphans
+  - -fno-warn-name-shadowing
+  - -j4
+
+library:
+  source-dirs: src 
+  exposed-modules:
+    - INet.SIC
+
+executables:
+  fme:
+    source-dirs:      app
+    main:             Main.hs
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - formality-experiments
+
+tests:
+  formality-experiments-test:
+    main:         Spec.hs
+    source-dirs:  test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - formality-experiments
+      - tasty
+      - tasty-hunit
