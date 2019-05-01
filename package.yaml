@@ -50,6 +50,7 @@ library:
   source-dirs: src 
   exposed-modules:
     - INet.SIC
+    - INet.Examples
 
 executables:
   fme:
