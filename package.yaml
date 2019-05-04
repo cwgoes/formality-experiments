@@ -16,6 +16,7 @@ dependencies:
   - text
   - mtl
   - containers
+  - megaparsec
 
 default-extensions:
   - NoImplicitPrelude
@@ -49,8 +50,11 @@ ghc-options:
 library:
   source-dirs: src 
   exposed-modules:
-    - INet.SIC
-    - INet.Examples
+    - SIC.INet.Examples
+    - SIC.Type
+    - SIC.INet
+    - SIC.Parser
+    - SIC.Compiler
 
 executables:
   fme:

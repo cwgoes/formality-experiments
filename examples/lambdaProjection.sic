@@ -1,0 +1,1 @@
+:let (a,b) = \x.\y.\z.y :in (a,b)
