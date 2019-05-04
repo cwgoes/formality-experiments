@@ -5,47 +5,47 @@ import           SIC.Type
 
 trivialCommute1 ∷ Net
 trivialCommute1 = makeNet
-  [ CONS (Ptr 1 P) (Ptr 2 L) (Ptr 3 L)
-  , DUPL (Ptr 0 P) (Ptr 4 L) (Ptr 5 L)
-  , FREE (Ptr 0 L)
-  , FREE (Ptr 0 R)
-  , FREE (Ptr 1 L)
-  , FREE (Ptr 1 R)
+  [ CONS (Ptr 1 P) (Ptr 2 A1) (Ptr 3 A1)
+  , DUPL (Ptr 0 P) (Ptr 4 A1) (Ptr 5 A1)
+  , FREE (Ptr 0 A1)
+  , FREE (Ptr 0 A2)
+  , FREE (Ptr 1 A1)
+  , FREE (Ptr 1 A2)
   ]
 
 trivialCommute2 ∷ Net
 trivialCommute2 = makeNet
-  [ CONS (Ptr 0 P) (Ptr 1 L) (Ptr 2 L)
-  , FREE (Ptr 0 L)
-  , FREE (Ptr 0 R)
+  [ CONS (Ptr 0 P) (Ptr 1 A1) (Ptr 2 A1)
+  , FREE (Ptr 0 A1)
+  , FREE (Ptr 0 A2)
   ]
 
 trivialCommute3 ∷ Net
 trivialCommute3 = makeNet
-  [ DUPL (Ptr 0 P) (Ptr 1 L) (Ptr 2 L)
-  , FREE (Ptr 0 L)
-  , FREE (Ptr 0 R)
+  [ DUPL (Ptr 0 P) (Ptr 1 A1) (Ptr 2 A1)
+  , FREE (Ptr 0 A1)
+  , FREE (Ptr 0 A2)
   ]
 
 trivialAnnihilate1 ∷ Net
 trivialAnnihilate1 = makeNet
-  [ CONS (Ptr 1 P) (Ptr 2 L) (Ptr 3 L)
-  , CONS (Ptr 0 P) (Ptr 4 L) (Ptr 5 L)
-  , FREE (Ptr 0 L)
-  , FREE (Ptr 0 R)
-  , FREE (Ptr 1 L)
-  , FREE (Ptr 1 R)
+  [ CONS (Ptr 1 P) (Ptr 2 A1) (Ptr 3 A1)
+  , CONS (Ptr 0 P) (Ptr 4 A1) (Ptr 5 A1)
+  , FREE (Ptr 0 A1)
+  , FREE (Ptr 0 A2)
+  , FREE (Ptr 1 A1)
+  , FREE (Ptr 1 A2)
   ]
 
 
 trivialAnnihilate2 ∷ Net
 trivialAnnihilate2 = makeNet
-  [ CONS (Ptr 1 P) (Ptr 2 L) (Ptr 3 L)
-  , CONS (Ptr 0 P) (Ptr 4 L) (Ptr 5 L)
-  , FREE (Ptr 0 L)
-  , FREE (Ptr 0 R)
-  , FREE (Ptr 1 L)
-  , FREE (Ptr 1 R)
+  [ CONS (Ptr 1 P) (Ptr 2 A1) (Ptr 3 A1)
+  , CONS (Ptr 0 P) (Ptr 4 A1) (Ptr 5 A1)
+  , FREE (Ptr 0 A1)
+  , FREE (Ptr 0 A2)
+  , FREE (Ptr 1 A1)
+  , FREE (Ptr 1 A2)
   ]
 
 --trivialAnnihilate3 ∷ Net

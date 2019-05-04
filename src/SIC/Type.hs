@@ -15,17 +15,17 @@ data Node
   | FREE Port            -- 1 slot: Left
   deriving (Show, Eq)
 
-data Slot = P | L | R
+data Slot = P | A1 | A2
   deriving (Show, Eq)
 
 slot ∷ Slot → Node → Port
-slot s (CONS p l r) = case s of P -> p; L -> l; R -> r;
-slot s (DUPL p l r) = case s of P -> p; L -> l; R -> r;
+slot s (CONS p l r) = case s of P -> p; A1 -> l; A2 -> r;
+slot s (DUPL p l r) = case s of P -> p; A1 -> l; A2 -> r;
 slot _ (FREE p)     = p
 
 setSlot ∷ Slot → Port → Node → Node
-setSlot s q (CONS p l r) = case s of P -> CONS q l r; L -> CONS p q r; R -> CONS p l q;
-setSlot s q (DUPL p l r) = case s of P -> DUPL q l r; L -> DUPL p q r; R -> DUPL p l q;
+setSlot s q (CONS p l r) = case s of P -> CONS q l r; A1 -> CONS p q r; A2 -> CONS p l q;
+setSlot s q (DUPL p l r) = case s of P -> DUPL q l r; A1 -> DUPL p q r; A2 -> DUPL p l q;
 setSlot _ q (FREE _) = FREE q
 
 data Kind = Cons | Dupl | Free deriving (Eq, Show)
@@ -36,9 +36,9 @@ kind (DUPL _ _ _) = Dupl
 kind (FREE _)     = Free
 
 defaultNode ∷ Int → Kind → Node
-defaultNode n Cons = CONS (Ptr n P) (Ptr n L) (Ptr n R)
-defaultNode n Dupl = DUPL (Ptr n P) (Ptr n L) (Ptr n R)
-defaultNode n Free = FREE (Ptr n L)
+defaultNode n Cons = CONS (Ptr n P) (Ptr n A1) (Ptr n A2)
+defaultNode n Dupl = DUPL (Ptr n P) (Ptr n A1) (Ptr n A2)
+defaultNode n Free = FREE (Ptr n A1)
 
 
 data Port = Ptr { toNode :: Int, toSlot :: Slot }

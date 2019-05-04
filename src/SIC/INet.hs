@@ -13,15 +13,16 @@ makeNet nodes =
 
 findRedexes ∷ M.Map Int Node → [(Int, Int)]
 findRedexes nodes =
-  go Set.empty $ M.toList $ toNode <$> ((M.filter isToP) $ (slot P) <$> nodes)
+  deDuplicate $ (toNode . slot P) <$> (M.filterWithKey isRedex nodes)
   where
-    isToP = \case; (Ptr _ P) -> True; _ -> False
-    isFree n = maybe False (\x -> kind x == Free) $ M.lookup n nodes
-    go s ((a, b):xs)
-      | isFree a && a == b = go (Set.insert (a, b) s) xs
-      | isFree a || isFree b || Set.member (b, a) s = go s xs
-      | otherwise = go (Set.insert (a, b) s) xs
-    go s [] = Set.toList s
+    isRedex _ (CONS (Ptr _ P) _ _) = True
+    isRedex _ (DUPL (Ptr _ P) _ _) = True
+    isRedex n (FREE (Ptr n' _))    = n == n'
+    isRedex _ _                    = False
+    deDuplicate = Set.toList . (M.foldrWithKey f Set.empty)
+    f k v s
+      | Set.member (v, k) s = s
+      | otherwise = (Set.insert (k, v) s)
 
 allocNode ∷ Node → State Net Int
 allocNode node = do
@@ -57,9 +58,9 @@ linkSlots (ia, sa) (ib, sb) = do
 linkPorts ∷ Maybe Port → Maybe Port → State Net ()
 linkPorts (Just (Ptr ia sa)) (Just (Ptr ib sb)) = linkSlots (ia, sa) (ib, sb)
 linkPorts (Just (Ptr ia sa)) Nothing            =
-  do ib <- allocDefault Free; linkSlots (ia,sa) (ib,L)
+  do ib <- allocDefault Free; linkSlots (ia,sa) (ib,A1)
 linkPorts Nothing (Just (Ptr ib sb))            =
-  do ia <- allocDefault Free; linkSlots (ia,L) (ib,sb)
+  do ia <- allocDefault Free; linkSlots (ia,A1) (ib,sb)
 linkPorts _ _                                   = return ()
 
 unlinkPort ∷ (Int, Slot) → State Net ()
@@ -81,32 +82,32 @@ rewrite (iA, iB) = do
   b <- gets $ ((M.! iB) . netNodes)
   if
     | kind a == kind b -> do
-      aLdest <- enterPort iA L
-      bLdest <- enterPort iB L
-      linkPorts aLdest bLdest
-      aRdest <- enterPort iA R
-      bRdest <- enterPort iB R
-      linkPorts aRdest bRdest
+      a1dest <- enterPort iA A1
+      b1dest <- enterPort iB A1
+      linkPorts a1dest b1dest
+      a2dest <- enterPort iA A2
+      b2dest <- enterPort iB A2
+      linkPorts a2dest b2dest
     | otherwise -> do
       iP <- allocDefault (kind b)
       iQ <- allocDefault (kind b)
       iR <- allocDefault (kind a)
       iS <- allocDefault (kind a)
-      linkSlots (iR, R) (iP, L)
-      linkSlots (iS, R) (iP, R)
-      linkSlots (iR, L) (iQ, L)
-      linkSlots (iS, L) (iQ, R)
-      aLdest <- enterPort iA L
-      aRdest <- enterPort iA R
-      bLdest <- enterPort iB L
-      bRdest <- enterPort iB R
-      linkPorts (Just $ Ptr iP P) aLdest
-      linkPorts (Just $ Ptr iQ P) aRdest
-      linkPorts (Just $ Ptr iR P) bLdest
-      linkPorts (Just $ Ptr iS P) bRdest
+      linkSlots (iS, A1) (iP, A2)
+      linkSlots (iR, A2) (iQ, A1)
+      linkSlots (iS, A2) (iQ, A2)
+      linkSlots (iR, A1) (iP, A1)
+      a1dest <- enterPort iA A1
+      a2dest <- enterPort iA A2
+      b1dest <- enterPort iB A1
+      b2dest <- enterPort iB A2
+      linkPorts (Just $ Ptr iP P) a1dest
+      linkPorts (Just $ Ptr iQ P) a2dest
+      linkPorts (Just $ Ptr iR P) b1dest
+      linkPorts (Just $ Ptr iS P) b2dest
 
-  mapM_ (\x -> unlinkPort (iA, x)) [P,L,R] >> freeNode iA
-  unless (iA == iB) (mapM_ (\x -> unlinkPort (iB, x)) [P,L,R] >> freeNode iB)
+  mapM_ (\x -> unlinkPort (iA, x)) [P,A1,A2] >> freeNode iA
+  unless (iA == iB) (mapM_ (\x -> unlinkPort (iB, x)) [P,A1,A2] >> freeNode iB)
 
 reduce ∷ Net → (Net, Int)
 reduce net =
