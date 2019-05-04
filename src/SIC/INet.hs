@@ -13,8 +13,9 @@ makeNet nodes =
 
 findRedexes ∷ M.Map Int Node → [(Int, Int)]
 findRedexes nodes =
-  go Set.empty $ M.toList $ (toNode . slot P) <$> nodes
+  go Set.empty $ M.toList $ toNode <$> ((M.filter isToP) $ (slot P) <$> nodes)
   where
+    isToP = \case; (Ptr _ P) -> True; _ -> False
     isFree n = maybe False (\x -> kind x == Free) $ M.lookup n nodes
     go s ((a, b):xs)
       | isFree a && a == b = go (Set.insert (a, b) s) xs
