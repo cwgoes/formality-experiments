@@ -1,0 +1,1 @@
+\u. \v. :let (a,b) = (\x.x, \y.y) :in ((a u), (b v))

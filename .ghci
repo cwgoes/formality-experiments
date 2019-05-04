@@ -1,0 +1,5 @@
+:set -XNoImplicitPrelude
+:set -XOverloadedStrings
+:set prompt "> "
+import Prelude ()
+
