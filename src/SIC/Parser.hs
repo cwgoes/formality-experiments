@@ -1,13 +1,10 @@
-{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-unused-do-bind #-}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
 module SIC.Parser where
 
-
 import           Protolude                  hiding (some, try)
 import           Data.Text                  (Text)
-import qualified Data.Text                  as T
 import           Data.Void                  (Void)
 import           Text.Megaparsec
 import           Text.Megaparsec.Char

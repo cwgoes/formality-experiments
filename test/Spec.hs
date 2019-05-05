@@ -14,5 +14,4 @@ main ∷ IO ()
 main = T.defaultMain (T.testGroup "Tests" [
   T.testCase "trivialAnnihilate1" ((4 == (M.size $ netNodes $ fst $ reduce trivialAnnihilate1)) T.@? "trivialAnnihilate1 failed to reduce"),
   T.testCase "trivialAnnihilate2" ((4 == (M.size $ netNodes $ fst $ reduce trivialAnnihilate2)) T.@? "trivialAnnihilate2 failed to reduce")
---  T.testCase "trivialAnnihilate3" ((0 == (M.size $ netNodes $ fst $ reduce trivialAnnihilate3)) T.@? "trivialAnnihilate3 failed to reduce")
   ])

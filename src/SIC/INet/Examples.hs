@@ -37,7 +37,6 @@ trivialAnnihilate1 = makeNet
   , FREE (Ptr 1 A2)
   ]
 
-
 trivialAnnihilate2 ∷ Net
 trivialAnnihilate2 = makeNet
   [ CONS (Ptr 1 P) (Ptr 2 A1) (Ptr 3 A1)
@@ -47,9 +46,3 @@ trivialAnnihilate2 = makeNet
   , FREE (Ptr 1 A1)
   , FREE (Ptr 1 A2)
   ]
-
---trivialAnnihilate3 ∷ Net
---trivialAnnihilate3 = makeNet [
---  (Eraser, [Pointer 1 0]),
---  (Eraser, [Pointer 0 0])
---  ]
