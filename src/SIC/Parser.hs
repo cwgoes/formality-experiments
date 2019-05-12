@@ -34,19 +34,10 @@ term ∷ Parser Term
 term = ti <|> parens ti
   where
     ti = lexeme $ choice
-        [ try let_
-        , try par_
-        , try app_
+        [ try app_
         , try lam_
         , try var_
         ]
-
-par_ ∷ Parser Term
-par_ = parens $ do
-  a <- term
-  comma
-  b <- term
-  return $ Par a b
 
 var_ ∷ Parser Term
 var_ = Var <$> symb
@@ -62,16 +53,3 @@ app_ = parens $ do
   a <- term
   b <- term
   return $ App a b
-
-let_ = do
-  symbol "let"
-  symbol "("
-  p <- symb
-  comma
-  q <- symb
-  symbol ")"
-  symbol "="
-  a <- term
-  symbol "in"
-  b <- term
-  return $ Let p q a b

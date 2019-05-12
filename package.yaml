@@ -50,6 +50,7 @@ ghc-options:
 library:
   source-dirs: src 
   exposed-modules:
+    - SIC.Eval
     - SIC.INet.Examples
     - SIC.Type
     - SIC.INet

@@ -40,7 +40,6 @@ defaultNode n Cons = CONS (Ptr n P) (Ptr n A1) (Ptr n A2)
 defaultNode n Dupl = DUPL (Ptr n P) (Ptr n A1) (Ptr n A2)
 defaultNode n Free = FREE (Ptr n A1)
 
-
 data Port = Ptr { toNode :: Int, toSlot :: Slot }
   deriving (Show, Eq)
 
@@ -50,9 +49,9 @@ type String = [Char]
 data Term
   = Lam Symb Term
   | App Term Term
-  | Par Term Term
-  | Let Symb Symb Term Term
   | Var Symb
+  | Era Symb Term
+  | Cpy Symb Symb Symb Term
   deriving (Eq, Show)
 
 instance Print Term where
@@ -60,12 +59,11 @@ instance Print Term where
   hPutStrLn h t = hPutStrLn h (T.pack $ prettyPrint t)
 
 prettyPrint ∷ Term → String
-prettyPrint (Var n)   =  showVar n
-prettyPrint (Lam h b) =  concat ["λ", showVar h, ".", prettyPrint b]
-prettyPrint (App l r) =  concat ["(", prettyPrint l, " ", prettyPrint r, ")"]
-prettyPrint (Par l r) =  concat ["(", prettyPrint l, ",", prettyPrint r, ")"]
-prettyPrint (Let p q t b) = concat
-  ["let (", showVar p, ",", showVar q, ") = ", prettyPrint t, " in\n", prettyPrint b]
+prettyPrint (Var n)       = showVar n
+prettyPrint (Lam h b)     = concat ["λ", showVar h, ".", prettyPrint b]
+prettyPrint (App l r)     = concat ["(", prettyPrint l, " ", prettyPrint r, ")"]
+prettyPrint (Era s t)     = concat ["[", showVar s, " = _] ", prettyPrint t]
+prettyPrint (Cpy v a b t) = concat ["[", showVar v, " = ", showVar a, ",", showVar b, " ", prettyPrint t]
 
 showVar ∷ Int → String
 showVar n = reverse $ go (n + 1)
