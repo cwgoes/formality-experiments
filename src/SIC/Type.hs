@@ -18,10 +18,11 @@ data Node
 data Slot = P | A1 | A2
   deriving (Show, Eq)
 
-slot ∷ Slot → Node → Port
-slot s (CONS p l r) = case s of P -> p; A1 -> l; A2 -> r;
-slot s (DUPL p l r) = case s of P -> p; A1 -> l; A2 -> r;
-slot _ (FREE p)     = p
+slot ∷ Slot → Node → Maybe Port
+slot s (CONS p l r) = return $ case s of P -> p; A1 -> l; A2 -> r;
+slot s (DUPL p l r) = return $ case s of P -> p; A1 -> l; A2 -> r;
+slot P (FREE p)     = return p
+slot _ (FREE _)     = Nothing
 
 setSlot ∷ Slot → Port → Node → Node
 setSlot s q (CONS p l r) = case s of P -> CONS q l r; A1 -> CONS p q r; A2 -> CONS p l q;

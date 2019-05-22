@@ -11,9 +11,12 @@ makeNet nodes =
   let n = M.fromList $ zip [0..] nodes
   in Net n (findRedexes n)
 
+reredex ∷ Net → Net
+reredex (Net nodes _) = Net nodes (findRedexes nodes)
+
 findRedexes ∷ M.Map Int Node → [(Int, Int)]
 findRedexes nodes =
-  deDuplicate $ (toNode . slot P) <$> (M.filterWithKey isRedex nodes)
+  deDuplicate $ (toNode . (\(Just x) -> x) . slot P) <$> (M.filterWithKey isRedex nodes)
   where
     isRedex _ (CONS (Ptr _ P) _ _) = True
     isRedex _ (DUPL (Ptr _ P) _ _) = True
@@ -42,7 +45,7 @@ freeNode addr = modify (\n -> n { netNodes = M.delete addr $ netNodes n })
 enterPort ∷ Int → Slot → State Net (Maybe Port)
 enterPort addr s = do
   net <- get
-  return $ (slot s) <$> M.lookup addr (netNodes net)
+  return $ (slot s) =<< M.lookup addr (netNodes net)
 
 setPort ∷ Int → Slot → Port → State Net ()
 setPort addr s port = modify $ \net ->

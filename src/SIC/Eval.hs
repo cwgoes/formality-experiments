@@ -27,7 +27,7 @@ free (Era s t)      = free t `union` singleton s
 free (Cpy s a b t)  = singleton s `union` (free t \\ singleton b \\ singleton a)
 
 replace ∷ Symb → Term -> Term → Term
-replace sy' tr' term =
+replace sy tr term =
   case term of
     Lam a b     -> Lam a (replace sy tr b)
     App a b     -> App (replace sy tr a) (replace sy tr b)
