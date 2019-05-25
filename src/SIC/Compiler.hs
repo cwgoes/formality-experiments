@@ -69,13 +69,26 @@ buildMultiplexor n = do
 demultiplexor ∷ Int → (Int, Net)
 demultiplexor n = runState (buildDemultiplexor n) emptyNet
 
+-- this is wrong
 buildDemultiplexor ∷ Int → State Net Int
 buildDemultiplexor 0 = do
   free <- allocDefault Free
   linkSlots (free, P) (free, P)
   return free
 buildDemultiplexor n = do
-  undefined
+  zero <- buildDemultiplexor 0
+  free <- allocDefault Free
+  linkSlots (zero, P) (free, P)
+  modify reredex
+  return free
+buildDemultiplexor n = do
+  connector <- buildDemultiplexor (n - 1)
+  node <- allocDefault Cons
+  free <- allocDefault Free
+  linkSlots (node, A1) (free, P)
+  linkSlots (node, P) (connector, A2)
+  modify reredex
+  return node
 
 muldemul ∷ Int → Net
 muldemul n = snd $ flip runState emptyNet $ do
